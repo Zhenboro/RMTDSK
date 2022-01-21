@@ -29,6 +29,11 @@ Partial Class Main
         Me.TimerONE = New System.Windows.Forms.Timer(Me.components)
         Me.Button1 = New System.Windows.Forms.Button()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.Button4 = New System.Windows.Forms.Button()
+        Me.Button5 = New System.Windows.Forms.Button()
+        Me.Button6 = New System.Windows.Forms.Button()
+        Me.Button7 = New System.Windows.Forms.Button()
+        Me.Button8 = New System.Windows.Forms.Button()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -59,11 +64,11 @@ Partial Class Main
         'Button3
         '
         Me.Button3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button3.Location = New System.Drawing.Point(651, 580)
+        Me.Button3.Location = New System.Drawing.Point(650, 576)
         Me.Button3.Name = "Button3"
-        Me.Button3.Size = New System.Drawing.Size(186, 27)
+        Me.Button3.Size = New System.Drawing.Size(57, 35)
         Me.Button3.TabIndex = 3
-        Me.Button3.Text = "Taskbar"
+        Me.Button3.Text = "Taskbar" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Mostrar"
         Me.Button3.UseVisualStyleBackColor = True
         '
         'TimerONE
@@ -89,11 +94,66 @@ Partial Class Main
         Me.TextBox1.TabIndex = 0
         Me.TextBox1.Text = "localhost:15243"
         '
+        'Button4
+        '
+        Me.Button4.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button4.Location = New System.Drawing.Point(476, 580)
+        Me.Button4.Name = "Button4"
+        Me.Button4.Size = New System.Drawing.Size(168, 27)
+        Me.Button4.TabIndex = 4
+        Me.Button4.Text = "Send Keys"
+        Me.Button4.UseVisualStyleBackColor = True
+        '
+        'Button5
+        '
+        Me.Button5.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button5.Location = New System.Drawing.Point(776, 580)
+        Me.Button5.Name = "Button5"
+        Me.Button5.Size = New System.Drawing.Size(57, 27)
+        Me.Button5.TabIndex = 5
+        Me.Button5.Text = "Inicio"
+        Me.Button5.UseVisualStyleBackColor = True
+        '
+        'Button6
+        '
+        Me.Button6.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button6.Location = New System.Drawing.Point(713, 576)
+        Me.Button6.Name = "Button6"
+        Me.Button6.Size = New System.Drawing.Size(57, 35)
+        Me.Button6.TabIndex = 6
+        Me.Button6.Text = "Taskbar" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Ocultar"
+        Me.Button6.UseVisualStyleBackColor = True
+        '
+        'Button7
+        '
+        Me.Button7.Anchor = System.Windows.Forms.AnchorStyles.Bottom
+        Me.Button7.Location = New System.Drawing.Point(427, 580)
+        Me.Button7.Name = "Button7"
+        Me.Button7.Size = New System.Drawing.Size(30, 27)
+        Me.Button7.TabIndex = 7
+        Me.Button7.Text = "R"
+        Me.Button7.UseVisualStyleBackColor = True
+        '
+        'Button8
+        '
+        Me.Button8.Anchor = System.Windows.Forms.AnchorStyles.Bottom
+        Me.Button8.Location = New System.Drawing.Point(391, 580)
+        Me.Button8.Name = "Button8"
+        Me.Button8.Size = New System.Drawing.Size(30, 27)
+        Me.Button8.TabIndex = 8
+        Me.Button8.Text = "L"
+        Me.Button8.UseVisualStyleBackColor = True
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(849, 619)
+        Me.Controls.Add(Me.Button8)
+        Me.Controls.Add(Me.Button7)
+        Me.Controls.Add(Me.Button6)
+        Me.Controls.Add(Me.Button5)
+        Me.Controls.Add(Me.Button4)
         Me.Controls.Add(Me.TextBox1)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.Button3)
@@ -116,4 +176,9 @@ Partial Class Main
     Friend WithEvents TimerONE As Timer
     Friend WithEvents Button1 As Button
     Friend WithEvents TextBox1 As TextBox
+    Friend WithEvents Button4 As Button
+    Friend WithEvents Button5 As Button
+    Friend WithEvents Button6 As Button
+    Friend WithEvents Button7 As Button
+    Friend WithEvents Button8 As Button
 End Class

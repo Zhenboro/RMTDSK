@@ -100,17 +100,128 @@ Public Class Main
     End Sub
     Sub ORDENES(ByVal ORDEN As String)
         Try
-            Dim PARTES As String() = ORDEN.Split(":")
-            POSICIONX = PARTES(1)
-            POSICIONY = PARTES(2)
-            Cursor.Position = New Point(POSICIONX, POSICIONY)
-            Select Case PARTES(0)
-                Case "IZQUIERDO"
-                    CLICKIZDO()
-                Case "DOBLE"
-                    CLICKIZDO()
-                    CLICKIZDO()
-            End Select
+            If ORDEN.StartsWith("[SEND_KEYS]") Then
+                ProcessKeys(ORDEN)
+            Else
+                Dim PARTES As String() = ORDEN.Split(":")
+                If PARTES(1) <> "NA" Then
+                    POSICIONX = PARTES(1)
+                    POSICIONY = PARTES(2)
+                    Cursor.Position = New Point(POSICIONX, POSICIONY)
+                End If
+                Select Case PARTES(0)
+                    Case "DERECHO"
+                        CLICKDCHO()
+                    Case "IZQUIERDO"
+                        CLICKIZDO()
+                    Case "DOBLE"
+                        CLICKIZDO()
+                        CLICKIZDO()
+                    Case "SHOWTAREAS"
+                        MUESTRABARRA()
+                    Case "HIDETAREAS"
+                        OCULTABARRA()
+                    Case "WINDOWS"
+                        MUESTRAINICIO()
+                End Select
+            End If
+        Catch ex As Exception
+            Console.WriteLine("ORDENES Error: " & ex.Message)
+        End Try
+    End Sub
+
+    Private Declare Sub keybd_event Lib "user32.dll" (ByVal bVk As IntPtr, ByVal bScan As IntPtr, ByVal dwFlags As IntPtr, ByVal dwExtraInfo As IntPtr)
+    Const KEYEVENTF_KEYUP = &H2 'Soltar
+    Const VK_BACK = &H8 'Backspace
+    Const VK_TAB = &H9 'TAB
+    Const VK_RETURN = &HD 'ENTER
+    Const VK_SHIFT = &H10 'SHIFT
+    Const VK_CONTROL = &H11 'CTRL
+    Const VK_MENU = &H12 'ALT
+    Const VK_CAPITAL = &H14 'CapLock
+    Const VK_ESCAPE = &H1B 'ESC
+    Const VK_SPACE = &H20 'Spacebar
+    Const VK_INSERT = &H2D 'Insert
+    Const VK_DELETE = &H2E 'SUPR
+    Const VK_STARTKEY = &H5B 'Win key
+    Const VK_CONTEXTKEY = &H5D
+    Const VK_LBUTTON = &H1
+    Const VK_RBUTTON = &H2
+    Const VK_MBUTTON = &H4
+    Const VK_F1 = &H70
+    Const VK_F2 = &H71
+    Const VK_F3 = &H72
+    Const VK_F4 = &H73
+    Const VK_F5 = &H74
+    Const VK_F6 = &H75
+    Const VK_F7 = &H76
+    Const VK_F8 = &H77
+    Const VK_F9 = &H78
+    Const VK_F10 = &H79
+    Const VK_F11 = &H7A
+    Const VK_F12 = &H7B
+
+    Sub ProcessKeys(ByVal orden As String)
+        Try
+            Dim args As String() = orden.Split("|")
+            Dim contenido As String = args(1)
+
+            Dim procesador As String() = contenido.Split(" ")
+
+            For Each palabra As String In procesador
+                Threading.Thread.Sleep(850)
+                If palabra Like "*%WIN%*" Then 'PROCESO TECLA WIN
+                    keybd_event(VK_STARTKEY, 0, 0, 0)
+                    keybd_event(VK_STARTKEY, 0, KEYEVENTF_KEYUP, 0)
+                ElseIf palabra Like "*%CTRL%*" Then
+                    keybd_event(VK_CONTROL, 0, 0, 0)
+                    keybd_event(VK_CONTROL, 0, KEYEVENTF_KEYUP, 0)
+                ElseIf palabra Like "*%ALT%*" Then
+                    keybd_event(VK_MENU, 0, 0, 0)
+                    keybd_event(VK_MENU, 0, KEYEVENTF_KEYUP, 0)
+                ElseIf palabra Like "*%SHIFT%*" Then
+                    keybd_event(VK_SHIFT, 0, 0, 0)
+                    keybd_event(VK_SHIFT, 0, KEYEVENTF_KEYUP, 0)
+                ElseIf palabra Like "*%BACKSPACE%*" Then
+                    keybd_event(VK_BACK, 0, 0, 0)
+                    keybd_event(VK_BACK, 0, KEYEVENTF_KEYUP, 0)
+                ElseIf palabra Like "*%ENTER%*" Then
+                    keybd_event(VK_RETURN, 0, 0, 0)
+                    keybd_event(VK_RETURN, 0, KEYEVENTF_KEYUP, 0)
+                ElseIf palabra Like "*%SPACE%*" Then
+                    keybd_event(VK_SPACE, 0, 0, 0)
+                    keybd_event(VK_SPACE, 0, KEYEVENTF_KEYUP, 0)
+                ElseIf palabra Like "*%TAB%*" Then
+                    keybd_event(VK_TAB, 0, 0, 0)
+                    keybd_event(VK_TAB, 0, KEYEVENTF_KEYUP, 0)
+                ElseIf palabra Like "*%ESC%*" Then
+                    keybd_event(VK_DELETE, 0, 0, 0)
+                    keybd_event(VK_DELETE, 0, KEYEVENTF_KEYUP, 0)
+                ElseIf palabra Like "*%SUPR%*" Then
+                    keybd_event(VK_DELETE, 0, 0, 0)
+                    keybd_event(VK_DELETE, 0, KEYEVENTF_KEYUP, 0)
+                ElseIf palabra Like "*%INSERT%*" Then
+                    keybd_event(VK_INSERT, 0, 0, 0)
+                    keybd_event(VK_INSERT, 0, KEYEVENTF_KEYUP, 0)
+                ElseIf palabra Like "*%CONTEXT%*" Then
+                    keybd_event(VK_CONTEXTKEY, 0, 0, 0)
+                    keybd_event(VK_CONTEXTKEY, 0, KEYEVENTF_KEYUP, 0)
+                ElseIf palabra Like "*%CAPITAL%*" Then
+                    keybd_event(VK_CAPITAL, 0, 0, 0)
+                    keybd_event(VK_CAPITAL, 0, KEYEVENTF_KEYUP, 0)
+                ElseIf palabra Like "*%LCLICK%*" Then
+                    keybd_event(VK_LBUTTON, 0, 0, 0)
+                    keybd_event(VK_LBUTTON, 0, KEYEVENTF_KEYUP, 0)
+                ElseIf palabra Like "*%RCLICK%*" Then
+                    keybd_event(VK_RBUTTON, 0, 0, 0)
+                    keybd_event(VK_RBUTTON, 0, KEYEVENTF_KEYUP, 0)
+                ElseIf palabra Like "*%MCLICK%*" Then
+                    keybd_event(VK_MBUTTON, 0, 0, 0)
+                    keybd_event(VK_MBUTTON, 0, KEYEVENTF_KEYUP, 0)
+                Else
+                    My.Computer.Keyboard.SendKeys(palabra, True)
+                End If
+            Next
         Catch ex As Exception
             Console.WriteLine("ORDENES Error: " & ex.Message)
         End Try
@@ -165,6 +276,8 @@ Public Class Main
         If hwndstartbutton <> IntPtr.Zero Then
             retval1 = ShowWindow(hwndstartbutton, SW_SHOW)
         End If
+        keybd_event(VK_STARTKEY, 0, 0, 0)
+        keybd_event(VK_STARTKEY, 0, KEYEVENTF_KEYUP, 0)
         Return retval1
     End Function
 #End Region

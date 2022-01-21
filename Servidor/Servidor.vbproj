@@ -96,6 +96,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="SendKeys.Designer.vb">
+      <DependentUpon>SendKeys.vb</DependentUpon>
+    </Compile>
+    <Compile Include="SendKeys.vb">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Main.resx">
@@ -106,6 +112,9 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SendKeys.resx">
+      <DependentUpon>SendKeys.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

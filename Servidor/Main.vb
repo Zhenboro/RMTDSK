@@ -12,7 +12,7 @@ Public Class Main
     Dim RESOLUCIONY As Integer
     Dim POSICIONX As Integer
     Dim POSICIONY As Integer
-    Dim ENVIO As Byte()
+    Public ENVIO As Byte()
 
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -92,7 +92,7 @@ Public Class Main
     End Sub
     Private Sub Button3_Click(sender As System.Object, e As System.EventArgs) Handles Button3.Click
         Try
-            Dim MENSAJE As String = "TAREAS:500:" & RESOLUCIONY
+            Dim MENSAJE As String = "SHOWTAREAS:NA:NA"
             ENVIO = System.Text.Encoding.UTF7.GetBytes(MENSAJE)
         Catch ex As Exception
             Console.WriteLine("Button3_Click Error: " & ex.Message)
@@ -107,5 +107,46 @@ Public Class Main
         Catch ex As Exception
             'Console.WriteLine("TimerONE_Tick Error: " & ex.Message)
         End Try
+    End Sub
+
+    Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
+        Try
+            Dim MENSAJE As String = "WINDOWS:NA:NA"
+            ENVIO = System.Text.Encoding.UTF7.GetBytes(MENSAJE)
+        Catch ex As Exception
+            Console.WriteLine("Button5_Click Error: " & ex.Message)
+        End Try
+    End Sub
+
+    Private Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click
+        Try
+            Dim MENSAJE As String = "HIDETAREAS:NA:NA"
+            ENVIO = System.Text.Encoding.UTF7.GetBytes(MENSAJE)
+        Catch ex As Exception
+            Console.WriteLine("Button6_Click Error: " & ex.Message)
+        End Try
+    End Sub
+
+    Private Sub Button8_Click(sender As Object, e As EventArgs) Handles Button8.Click
+        Try
+            Dim MENSAJE As String = "IZQUIERDO:" & POSICIONX & ":" & POSICIONY
+            ENVIO = System.Text.Encoding.UTF7.GetBytes(MENSAJE)
+        Catch ex As Exception
+            Console.WriteLine("Button8_Click Error: " & ex.Message)
+        End Try
+    End Sub
+
+    Private Sub Button7_Click(sender As Object, e As EventArgs) Handles Button7.Click
+        Try
+            Dim MENSAJE As String = "DERECHO:" & POSICIONX & ":" & POSICIONY
+            ENVIO = System.Text.Encoding.UTF7.GetBytes(MENSAJE)
+        Catch ex As Exception
+            Console.WriteLine("Button7_Click Error: " & ex.Message)
+        End Try
+    End Sub
+
+    Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+        SendKeys.Show()
+        SendKeys.Focus()
     End Sub
 End Class
