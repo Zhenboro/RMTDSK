@@ -61,6 +61,7 @@ Partial Class SendKeys
         '
         'Button3
         '
+        Me.Button3.Anchor = System.Windows.Forms.AnchorStyles.Bottom
         Me.Button3.Location = New System.Drawing.Point(363, 415)
         Me.Button3.Name = "Button3"
         Me.Button3.Size = New System.Drawing.Size(75, 23)

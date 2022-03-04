@@ -90,14 +90,7 @@ Public Class Main
             Console.WriteLine("PictureBox1_DoubleClick Error: " & ex.Message)
         End Try
     End Sub
-    Private Sub Button3_Click(sender As System.Object, e As System.EventArgs) Handles Button3.Click
-        Try
-            Dim MENSAJE As String = "SHOWTAREAS:NA:NA"
-            ENVIO = System.Text.Encoding.UTF7.GetBytes(MENSAJE)
-        Catch ex As Exception
-            Console.WriteLine("Button3_Click Error: " & ex.Message)
-        End Try
-    End Sub
+
     Private Sub TimerONE_Tick(sender As Object, e As EventArgs) Handles TimerONE.Tick
         Dim BF As New BinaryFormatter
         Try
@@ -109,44 +102,104 @@ Public Class Main
         End Try
     End Sub
 
-    Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
-        Try
-            Dim MENSAJE As String = "WINDOWS:NA:NA"
-            ENVIO = System.Text.Encoding.UTF7.GetBytes(MENSAJE)
-        Catch ex As Exception
-            Console.WriteLine("Button5_Click Error: " & ex.Message)
-        End Try
-    End Sub
-
     Private Sub Button6_Click(sender As Object, e As EventArgs) Handles Button6.Click
-        Try
-            Dim MENSAJE As String = "HIDETAREAS:NA:NA"
-            ENVIO = System.Text.Encoding.UTF7.GetBytes(MENSAJE)
-        Catch ex As Exception
-            Console.WriteLine("Button6_Click Error: " & ex.Message)
-        End Try
+        TaskBar(0)
+    End Sub
+    Private Sub Button3_Click(sender As System.Object, e As System.EventArgs) Handles Button3.Click
+        TaskBar(1)
+    End Sub
+    Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
+        TaskBar(2)
     End Sub
 
     Private Sub Button8_Click(sender As Object, e As EventArgs) Handles Button8.Click
+        ClickIzquierdo()
+    End Sub
+    Private Sub Button7_Click(sender As Object, e As EventArgs) Handles Button7.Click
+        ClickDerecho()
+    End Sub
+
+    Sub ClickIzquierdo()
         Try
             Dim MENSAJE As String = "IZQUIERDO:" & POSICIONX & ":" & POSICIONY
             ENVIO = System.Text.Encoding.UTF7.GetBytes(MENSAJE)
         Catch ex As Exception
-            Console.WriteLine("Button8_Click Error: " & ex.Message)
+            Console.WriteLine("ClickIzquierdo Error: " & ex.Message)
         End Try
     End Sub
-
-    Private Sub Button7_Click(sender As Object, e As EventArgs) Handles Button7.Click
+    Sub ClickDerecho()
         Try
             Dim MENSAJE As String = "DERECHO:" & POSICIONX & ":" & POSICIONY
             ENVIO = System.Text.Encoding.UTF7.GetBytes(MENSAJE)
         Catch ex As Exception
-            Console.WriteLine("Button7_Click Error: " & ex.Message)
+            Console.WriteLine("ClickDerecho Error: " & ex.Message)
+        End Try
+    End Sub
+
+    Sub TaskBar(ByVal op As SByte)
+        Try
+            If op = 0 Then
+                Dim MENSAJE As String = "HIDETAREAS:NA:NA"
+                ENVIO = System.Text.Encoding.UTF7.GetBytes(MENSAJE)
+            ElseIf op = 1 Then
+                Dim MENSAJE As String = "SHOWTAREAS:NA:NA"
+                ENVIO = System.Text.Encoding.UTF7.GetBytes(MENSAJE)
+            ElseIf op = 2 Then
+                Dim MENSAJE As String = "WINDOWS:NA:NA"
+                ENVIO = System.Text.Encoding.UTF7.GetBytes(MENSAJE)
+            End If
+        Catch ex As Exception
+            Console.WriteLine("TaskBar Error: " & ex.Message)
         End Try
     End Sub
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
         SendKeys.Show()
         SendKeys.Focus()
+    End Sub
+
+    Dim EsPantallaCompleta As Boolean = False
+    Private Sub PantallaCompletaToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PantallaCompletaToolStripMenuItem.Click
+        If EsPantallaCompleta Then
+            Me.FormBorderStyle = FormBorderStyle.Sizable
+            Me.WindowState = FormWindowState.Normal
+            PictureBox1.Dock = DockStyle.None
+            PictureBox1.Anchor = AnchorStyles.Bottom AndAlso AnchorStyles.Left AndAlso AnchorStyles.Right AndAlso AnchorStyles.Top
+            Panel1.Dock = DockStyle.None
+            EsPantallaCompleta = False
+        Else
+            Me.FormBorderStyle = FormBorderStyle.None
+            Me.WindowState = FormWindowState.Maximized
+            PictureBox1.Dock = DockStyle.Fill
+            Panel1.Dock = DockStyle.None
+            EsPantallaCompleta = True
+        End If
+    End Sub
+
+    Private Sub SalirToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SalirToolStripMenuItem.Click
+        Me.Close()
+    End Sub
+    Private Sub MostrarToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MostrarToolStripMenuItem.Click
+        If Panel1.Visible Then
+            Panel1.Visible = False
+        Else
+            Panel1.Visible = True
+        End If
+    End Sub
+    Private Sub ClickDerechoToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ClickDerechoToolStripMenuItem.Click
+        ClickDerecho()
+    End Sub
+    Private Sub ClickIzquierdoToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ClickIzquierdoToolStripMenuItem.Click
+        ClickIzquierdo()
+    End Sub
+
+    Private Sub OcultarToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OcultarToolStripMenuItem.Click
+        TaskBar(0)
+    End Sub
+    Private Sub MostrarToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles MostrarToolStripMenuItem1.Click
+        TaskBar(1)
+    End Sub
+    Private Sub InicioToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InicioToolStripMenuItem.Click
+        TaskBar(2)
     End Sub
 End Class
