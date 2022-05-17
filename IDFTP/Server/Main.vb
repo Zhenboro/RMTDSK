@@ -1,15 +1,52 @@
-﻿Public Class Main
+﻿Imports Microsoft.Win32
+Public Class Main
     Dim DIRCommons As String = "C:\Users\" & Environment.UserName & "\AppData\Local\Zhenboro\RMTDSK IDFTP"
     Dim threadActualiza As Threading.Thread
+    Dim ftpUser As String = Nothing
+    Dim ftpPass As String = Nothing
+    Dim ftpHost As String = Nothing
+    Dim httpHost As String = Nothing
     Dim RESOLUCIONX As Integer
     Dim RESOLUCIONY As Integer
     Dim POSICIONX As Integer
     Dim POSICIONY As Integer
     Dim ServerURL As String
     Public ENVIO As String
-
+    Sub LoadMemory()
+        Try
+            Dim llaveReg As String = "SOFTWARE\\Zhenboro\\RMTDSK"
+            Dim registerKey As RegistryKey = Registry.CurrentUser.OpenSubKey(llaveReg, True)
+            If registerKey Is Nothing Then
+                SaveMemory()
+            Else
+                ftpUser = registerKey.GetValue("ftpUser")
+                ftpPass = registerKey.GetValue("ftpPass")
+                ftpHost = registerKey.GetValue("ftpHost")
+                httpHost = registerKey.GetValue("httpHost")
+                TextBox1.Text = httpHost
+            End If
+        Catch ex As Exception
+            Console.WriteLine("LoadMemory Error: " & ex.Message)
+        End Try
+    End Sub
+    Sub SaveMemory()
+        Try
+            Dim llaveReg As String = "SOFTWARE\\Zhenboro\\RMTDSK"
+            Dim registerKey As RegistryKey = Registry.CurrentUser.OpenSubKey(llaveReg, True)
+            If registerKey Is Nothing Then
+                Registry.CurrentUser.CreateSubKey(llaveReg, True)
+                registerKey = Registry.CurrentUser.OpenSubKey(llaveReg, True)
+            End If
+            registerKey.SetValue("ftpUser", ftpUser)
+            registerKey.SetValue("ftpPass", ftpPass)
+            registerKey.SetValue("ftpHost", ftpHost)
+            registerKey.SetValue("httpHost", TextBox1.Text)
+        Catch ex As Exception
+            Console.WriteLine("SaveMemory Error: " & ex.Message)
+        End Try
+    End Sub
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+        LoadMemory()
     End Sub
     Private Sub Main_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         Try
@@ -29,6 +66,12 @@
     End Sub
     Sub Iniciar()
         Try
+            If ftpHost = Nothing Or ftpUser = Nothing Or ftpPass = Nothing Then
+                ftpHost = InputBox("Ingrese la direccion host: ")
+                ftpUser = InputBox("Ingrese el nombre de usuario: ")
+                ftpPass = InputBox("Ingrese la contraseña: ")
+            End If
+            SaveMemory()
             Button1.Enabled = False
             TextBox1.Enabled = False
             CheckForIllegalCrossThreadCalls = False
@@ -44,9 +87,8 @@
         While True
             Try
                 MostrarPantalazo()
-                Threading.Thread.Sleep(1500)
                 EnviarControles()
-                Threading.Thread.Sleep(1500)
+                Threading.Thread.Sleep(5000)
             Catch ex As Exception
                 Console.WriteLine("Actualizar Error: " & ex.Message)
             End Try
@@ -76,7 +118,7 @@
             If My.Computer.FileSystem.FileExists(filePath) Then
                 My.Computer.FileSystem.DeleteFile(filePath)
             End If
-            My.Computer.Network.DownloadFile(ServerURL & "\screenshot.png", filePath)
+            My.Computer.Network.DownloadFile(ftpHost & "\screenshot.png", filePath, ftpUser, ftpPass, False, 3000, True)
             Using fs As New System.IO.FileStream(filePath, IO.FileMode.Open)
                 PictureBox1.Image = New Bitmap(Image.FromStream(fs))
             End Using

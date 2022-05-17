@@ -1,16 +1,13 @@
-﻿Imports System.Net.Sockets
-Imports System.Runtime.Serialization.Formatters.Binary
-Imports System.IO
+﻿Imports System.Runtime.Serialization.Formatters.Binary
 Imports System.Runtime.InteropServices
-Imports System.Timers
 Public Class Main
     Dim DIRCommons As String = "C:\Users\" & Environment.UserName & "\AppData\Local\Zhenboro\RMTDSK IDFTP"
     Dim threadScreenshot As Threading.Thread
     Dim threadMensajes As Threading.Thread
-    Dim ServerURL As String ' = "chemic-jug.000webhostapp.com/RMTDSK"
+    Dim ServerURL As String
 
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        LeerParametros()
+        LeerParametros(Command())
         Iniciar()
     End Sub
     Private Sub Main_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
@@ -20,18 +17,18 @@ Public Class Main
         End Try
     End Sub
 
-    Sub LeerParametros()
+    Sub LeerParametros(ByVal parametros As String)
         Try
-            If My.Application.CommandLineArgs.Count = 0 Then
-                End
+            If parametros <> Nothing Then
+                Dim parameter As String = parametros
+                Dim args() As String = parameter.Split(" ")
+                If parameter.ToLower.StartsWith("--serverurl") Then
+                    ServerURL = args(1)
+                ElseIf parameter.ToLower.StartsWith("--stop") Then
+                    End
+                End If
             Else
-                For i As Integer = 0 To My.Application.CommandLineArgs.Count - 1
-                    Dim parameter As String = My.Application.CommandLineArgs(i)
-                    If parameter Like "*-ServerURL=*" Then
-                        Dim args As String() = parameter.Split("=")
-                        ServerURL = args(1)
-                    End If
-                Next
+                End
             End If
         Catch ex As Exception
             Console.WriteLine("TimerUNO Error: " & ex.Message)
