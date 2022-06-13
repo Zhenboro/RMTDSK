@@ -108,7 +108,7 @@ Public Class Main
 
                 My.Computer.Network.UploadFile(filePath, ServerURL & "\fileUpload.php")
 
-                Threading.Thread.Sleep(3000)
+                Threading.Thread.Sleep(5000)
             Catch ex As Exception
                 Console.WriteLine("Lector Error: " & ex.Message)
             End Try

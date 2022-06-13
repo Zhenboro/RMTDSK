@@ -12,9 +12,10 @@ Public Class Main
     Dim POSICIONY As Integer
     Dim ServerURL As String
     Public ENVIO As String
+    Dim refreshDelay As Integer = 3000
     Sub LoadMemory()
         Try
-            Dim llaveReg As String = "SOFTWARE\\Zhenboro\\RMTDSK"
+            Dim llaveReg As String = "SOFTWARE\\Zhenboro\\RMTDSK IDFTP"
             Dim registerKey As RegistryKey = Registry.CurrentUser.OpenSubKey(llaveReg, True)
             If registerKey Is Nothing Then
                 SaveMemory()
@@ -23,6 +24,7 @@ Public Class Main
                 ftpPass = registerKey.GetValue("ftpPass")
                 ftpHost = registerKey.GetValue("ftpHost")
                 httpHost = registerKey.GetValue("httpHost")
+                refreshDelay = registerKey.GetValue("refreshDelay")
                 TextBox1.Text = httpHost
             End If
         Catch ex As Exception
@@ -31,7 +33,7 @@ Public Class Main
     End Sub
     Sub SaveMemory()
         Try
-            Dim llaveReg As String = "SOFTWARE\\Zhenboro\\RMTDSK"
+            Dim llaveReg As String = "SOFTWARE\\Zhenboro\\RMTDSK IDFTP"
             Dim registerKey As RegistryKey = Registry.CurrentUser.OpenSubKey(llaveReg, True)
             If registerKey Is Nothing Then
                 Registry.CurrentUser.CreateSubKey(llaveReg, True)
@@ -41,6 +43,7 @@ Public Class Main
             registerKey.SetValue("ftpPass", ftpPass)
             registerKey.SetValue("ftpHost", ftpHost)
             registerKey.SetValue("httpHost", TextBox1.Text)
+            registerKey.SetValue("refreshDelay", refreshDelay)
         Catch ex As Exception
             Console.WriteLine("SaveMemory Error: " & ex.Message)
         End Try
@@ -62,7 +65,8 @@ Public Class Main
             threadActualiza.Abort()
         Catch
         End Try
-        End
+        Button1.Enabled = True
+        Button2.Enabled = False
     End Sub
     Sub Iniciar()
         Try
@@ -78,6 +82,7 @@ Public Class Main
             ServerURL = TextBox1.Text
             threadActualiza = New Threading.Thread(AddressOf Actualizar)
             threadActualiza.Start()
+            Button2.Enabled = True
         Catch ex As Exception
             Console.WriteLine("Iniciar Error: " & ex.Message)
         End Try
@@ -88,7 +93,7 @@ Public Class Main
             Try
                 MostrarPantalazo()
                 EnviarControles()
-                Threading.Thread.Sleep(5000)
+                Threading.Thread.Sleep(refreshDelay)
             Catch ex As Exception
                 Console.WriteLine("Actualizar Error: " & ex.Message)
             End Try
@@ -208,7 +213,7 @@ Public Class Main
         Me.Close()
     End Sub
     Private Sub MostrarToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MostrarToolStripMenuItem.Click
-
+        TaskBar(1)
     End Sub
     Private Sub ClickDerechoToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ClickDerechoToolStripMenuItem.Click
         ClickDerecho()

@@ -64,7 +64,7 @@ Partial Class Main
         Me.Panel1.Controls.Add(Me.Button6)
         Me.Panel1.Controls.Add(Me.Button4)
         Me.Panel1.Controls.Add(Me.Button5)
-        Me.Panel1.Location = New System.Drawing.Point(10, 578)
+        Me.Panel1.Location = New System.Drawing.Point(12, 578)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(825, 41)
         Me.Panel1.TabIndex = 11
@@ -81,6 +81,7 @@ Partial Class Main
         'Button2
         '
         Me.Button2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Button2.Enabled = False
         Me.Button2.Location = New System.Drawing.Point(279, 7)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(87, 27)
@@ -91,7 +92,7 @@ Partial Class Main
         'Button8
         '
         Me.Button8.Anchor = System.Windows.Forms.AnchorStyles.Bottom
-        Me.Button8.Location = New System.Drawing.Point(380, 7)
+        Me.Button8.Location = New System.Drawing.Point(382, 7)
         Me.Button8.Name = "Button8"
         Me.Button8.Size = New System.Drawing.Size(30, 27)
         Me.Button8.TabIndex = 8
@@ -111,7 +112,7 @@ Partial Class Main
         'Button7
         '
         Me.Button7.Anchor = System.Windows.Forms.AnchorStyles.Bottom
-        Me.Button7.Location = New System.Drawing.Point(416, 7)
+        Me.Button7.Location = New System.Drawing.Point(418, 7)
         Me.Button7.Name = "Button7"
         Me.Button7.Size = New System.Drawing.Size(30, 27)
         Me.Button7.TabIndex = 7
@@ -165,9 +166,10 @@ Partial Class Main
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.PictureBox1.BackColor = System.Drawing.Color.DimGray
         Me.PictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.PictureBox1.ContextMenuStrip = Me.Viewer
         Me.PictureBox1.Location = New System.Drawing.Point(12, 12)
         Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(820, 560)
+        Me.PictureBox1.Size = New System.Drawing.Size(825, 560)
         Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox1.TabIndex = 10
         Me.PictureBox1.TabStop = False
@@ -200,24 +202,24 @@ Partial Class Main
         'MostrarToolStripMenuItem1
         '
         Me.MostrarToolStripMenuItem1.Name = "MostrarToolStripMenuItem1"
-        Me.MostrarToolStripMenuItem1.Size = New System.Drawing.Size(115, 22)
+        Me.MostrarToolStripMenuItem1.Size = New System.Drawing.Size(180, 22)
         Me.MostrarToolStripMenuItem1.Text = "Mostrar"
         '
         'OcultarToolStripMenuItem
         '
         Me.OcultarToolStripMenuItem.Name = "OcultarToolStripMenuItem"
-        Me.OcultarToolStripMenuItem.Size = New System.Drawing.Size(115, 22)
+        Me.OcultarToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.OcultarToolStripMenuItem.Text = "Ocultar"
         '
         'ToolStripMenuItem2
         '
         Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
-        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(112, 6)
+        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(177, 6)
         '
         'InicioToolStripMenuItem
         '
         Me.InicioToolStripMenuItem.Name = "InicioToolStripMenuItem"
-        Me.InicioToolStripMenuItem.Size = New System.Drawing.Size(115, 22)
+        Me.InicioToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.InicioToolStripMenuItem.Text = "Inicio"
         '
         'ToolStripMenuItem3

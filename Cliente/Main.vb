@@ -12,7 +12,7 @@ Public Class Main
     Dim ServerPort As Integer ' = 15243
 
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        LeerParametros()
+        ReadParameters()
         Iniciar()
     End Sub
     Private Sub Main_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
@@ -23,24 +23,24 @@ Public Class Main
         End Try
     End Sub
 
-    Sub LeerParametros()
+    Sub ReadParameters()
         Try
             If My.Application.CommandLineArgs.Count = 0 Then
                 End
             Else
                 For i As Integer = 0 To My.Application.CommandLineArgs.Count - 1
                     Dim parameter As String = My.Application.CommandLineArgs(i)
-                    If parameter Like "*-ServerIP=*" Then
-                        Dim args As String() = parameter.Split("=")
-                        ServerIP = args(1)
-                    ElseIf parameter Like "*-ServerPort=*" Then
-                        Dim args As String() = parameter.Split("=")
-                        ServerPort = Integer.Parse(args(1))
+                    If parameter.ToLower Like "*--serverip*" Then
+                        Dim args As String() = parameter.Split("-")
+                        ServerIP = args(3)
+                    ElseIf parameter.ToLower Like "*--serverport*" Then
+                        Dim args As String() = parameter.Split("-")
+                        ServerPort = Integer.Parse(args(3))
                     End If
                 Next
             End If
         Catch ex As Exception
-            Console.WriteLine("TimerUNO Error: " & ex.Message)
+            Console.WriteLine("ReadParameters Error: " & ex.Message)
             End
         End Try
     End Sub

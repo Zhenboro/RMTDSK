@@ -2,20 +2,51 @@
 Imports System.Threading
 Imports System.Net
 Imports System.Runtime.Serialization.Formatters.Binary
+Imports Microsoft.Win32
 Public Class Main
     Dim YO As TcpListener
     Dim REMOTO As TcpClient
     Dim RECIBE As Thread
     Dim NS As NetworkStream
+    Dim ServerIP As String = "localhost"
+    Dim ServerPort As Integer = 15243
 
     Dim RESOLUCIONX As Integer
     Dim RESOLUCIONY As Integer
     Dim POSICIONX As Integer
     Dim POSICIONY As Integer
     Public ENVIO As Byte()
-
+    Sub LoadMemory()
+        Try
+            Dim llaveReg As String = "SOFTWARE\\Zhenboro\\RMTDSK"
+            Dim registerKey As RegistryKey = Registry.CurrentUser.OpenSubKey(llaveReg, True)
+            If registerKey Is Nothing Then
+                SaveMemory()
+            Else
+                ServerIP = registerKey.GetValue("ServerIP")
+                ServerPort = registerKey.GetValue("ServerPort")
+                TextBox1.Text = ServerIP & ":" & ServerPort
+            End If
+        Catch ex As Exception
+            Console.WriteLine("LoadMemory Error: " & ex.Message)
+        End Try
+    End Sub
+    Sub SaveMemory()
+        Try
+            Dim llaveReg As String = "SOFTWARE\\Zhenboro\\RMTDSK"
+            Dim registerKey As RegistryKey = Registry.CurrentUser.OpenSubKey(llaveReg, True)
+            If registerKey Is Nothing Then
+                Registry.CurrentUser.CreateSubKey(llaveReg, True)
+                registerKey = Registry.CurrentUser.OpenSubKey(llaveReg, True)
+            End If
+            registerKey.SetValue("ServerIP", ServerIP)
+            registerKey.SetValue("ServerPort", ServerPort)
+        Catch ex As Exception
+            Console.WriteLine("SaveMemory Error: " & ex.Message)
+        End Try
+    End Sub
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+        LoadMemory()
     End Sub
     Private Sub Main_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         Try
@@ -43,6 +74,9 @@ Public Class Main
             TextBox1.Enabled = False
             CheckForIllegalCrossThreadCalls = False
             Dim args As String() = TextBox1.Text.Split(":")
+            ServerIP = args(0)
+            ServerPort = args(1)
+            SaveMemory()
             YO = New TcpListener(IPAddress.Any, args(1))
             YO.Start()
             RECIBE = New Thread(AddressOf RECIBIR)
