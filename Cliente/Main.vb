@@ -12,6 +12,7 @@ Public Class Main
     Dim ServerPort As Integer ' = 15243
 
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Init()
         ReadParameters()
         Iniciar()
     End Sub
@@ -40,7 +41,7 @@ Public Class Main
                 Next
             End If
         Catch ex As Exception
-            Console.WriteLine("ReadParameters Error: " & ex.Message)
+            AddToLog("ReadParameters@Main", "Error: " & ex.Message, True)
             End
         End Try
     End Sub
@@ -55,7 +56,7 @@ Public Class Main
             AddHandler TimerTWO.Elapsed, New ElapsedEventHandler(AddressOf TimerDOS)
             TimerTWO.Start()
         Catch ex As Exception
-            Console.WriteLine("Iniciar Error: " & ex.Message)
+            AddToLog("Iniciar@Main", "Error: " & ex.Message, True)
             End
         End Try
     End Sub
@@ -64,10 +65,10 @@ Public Class Main
         Dim IMAGEN As Bitmap
         Try
             Dim BM As Bitmap
-            BM = New Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height)
+            BM = New Bitmap(Screen.AllScreens.Sum(Function(s As Screen) s.Bounds.Width), Screen.AllScreens.Max(Function(s As Screen) s.Bounds.Height))
             Dim DIBUJO As Graphics
             DIBUJO = Graphics.FromImage(BM)
-            DIBUJO.CopyFromScreen(0, 0, 0, 0, Screen.PrimaryScreen.Bounds.Size)
+            DIBUJO.CopyFromScreen(SystemInformation.VirtualScreen.X, SystemInformation.VirtualScreen.Y, 0, 0, SystemInformation.VirtualScreen.Size)
             DIBUJO.DrawImage(BM, 0, 0, BM.Width, BM.Height)
             IMAGEN = New Bitmap(BM)
             Dim DIBUJO2 As Graphics
@@ -81,7 +82,7 @@ Public Class Main
             NS = YO.GetStream
             BF.Serialize(NS, IMAGEN)
         Catch ex As Exception
-            Console.WriteLine("TimerUNO Error: " & ex.Message)
+            AddToLog("TimerUNO@Main", "Error: " & ex.Message, True)
             End
         End Try
     End Sub
@@ -94,7 +95,7 @@ Public Class Main
                 ORDENES(MENSAJE)
             End If
         Catch ex As Exception
-            Console.WriteLine("TimerDOS Error: " & ex.Message)
+            AddToLog("TimerDOS@Main", "Error: " & ex.Message, True)
             End
         End Try
     End Sub
@@ -126,40 +127,13 @@ Public Class Main
                 End Select
             End If
         Catch ex As Exception
-            Console.WriteLine("ORDENES Error: " & ex.Message)
+            AddToLog("ORDENES@Main", "Error: " & ex.Message, True)
         End Try
     End Sub
 
     Private Declare Sub keybd_event Lib "user32.dll" (ByVal bVk As IntPtr, ByVal bScan As IntPtr, ByVal dwFlags As IntPtr, ByVal dwExtraInfo As IntPtr)
     Const KEYEVENTF_KEYUP = &H2 'Soltar
-    Const VK_BACK = &H8 'Backspace
-    Const VK_TAB = &H9 'TAB
-    Const VK_RETURN = &HD 'ENTER
-    Const VK_SHIFT = &H10 'SHIFT
-    Const VK_CONTROL = &H11 'CTRL
-    Const VK_MENU = &H12 'ALT
-    Const VK_CAPITAL = &H14 'CapLock
-    Const VK_ESCAPE = &H1B 'ESC
-    Const VK_SPACE = &H20 'Spacebar
-    Const VK_INSERT = &H2D 'Insert
-    Const VK_DELETE = &H2E 'SUPR
     Const VK_STARTKEY = &H5B 'Win key
-    Const VK_CONTEXTKEY = &H5D
-    Const VK_LBUTTON = &H1
-    Const VK_RBUTTON = &H2
-    Const VK_MBUTTON = &H4
-    Const VK_F1 = &H70
-    Const VK_F2 = &H71
-    Const VK_F3 = &H72
-    Const VK_F4 = &H73
-    Const VK_F5 = &H74
-    Const VK_F6 = &H75
-    Const VK_F7 = &H76
-    Const VK_F8 = &H77
-    Const VK_F9 = &H78
-    Const VK_F10 = &H79
-    Const VK_F11 = &H7A
-    Const VK_F12 = &H7B
 
     Sub ProcessKeys(ByVal orden As String)
         Try
@@ -168,62 +142,13 @@ Public Class Main
 
             Dim procesador As String() = contenido.Split(" ")
 
-            For Each palabra As String In procesador
-                Threading.Thread.Sleep(850)
-                If palabra Like "*%WIN%*" Then 'PROCESO TECLA WIN
-                    keybd_event(VK_STARTKEY, 0, 0, 0)
-                    keybd_event(VK_STARTKEY, 0, KEYEVENTF_KEYUP, 0)
-                ElseIf palabra Like "*%CTRL%*" Then
-                    keybd_event(VK_CONTROL, 0, 0, 0)
-                    keybd_event(VK_CONTROL, 0, KEYEVENTF_KEYUP, 0)
-                ElseIf palabra Like "*%ALT%*" Then
-                    keybd_event(VK_MENU, 0, 0, 0)
-                    keybd_event(VK_MENU, 0, KEYEVENTF_KEYUP, 0)
-                ElseIf palabra Like "*%SHIFT%*" Then
-                    keybd_event(VK_SHIFT, 0, 0, 0)
-                    keybd_event(VK_SHIFT, 0, KEYEVENTF_KEYUP, 0)
-                ElseIf palabra Like "*%BACKSPACE%*" Then
-                    keybd_event(VK_BACK, 0, 0, 0)
-                    keybd_event(VK_BACK, 0, KEYEVENTF_KEYUP, 0)
-                ElseIf palabra Like "*%ENTER%*" Then
-                    keybd_event(VK_RETURN, 0, 0, 0)
-                    keybd_event(VK_RETURN, 0, KEYEVENTF_KEYUP, 0)
-                ElseIf palabra Like "*%SPACE%*" Then
-                    keybd_event(VK_SPACE, 0, 0, 0)
-                    keybd_event(VK_SPACE, 0, KEYEVENTF_KEYUP, 0)
-                ElseIf palabra Like "*%TAB%*" Then
-                    keybd_event(VK_TAB, 0, 0, 0)
-                    keybd_event(VK_TAB, 0, KEYEVENTF_KEYUP, 0)
-                ElseIf palabra Like "*%ESC%*" Then
-                    keybd_event(VK_DELETE, 0, 0, 0)
-                    keybd_event(VK_DELETE, 0, KEYEVENTF_KEYUP, 0)
-                ElseIf palabra Like "*%SUPR%*" Then
-                    keybd_event(VK_DELETE, 0, 0, 0)
-                    keybd_event(VK_DELETE, 0, KEYEVENTF_KEYUP, 0)
-                ElseIf palabra Like "*%INSERT%*" Then
-                    keybd_event(VK_INSERT, 0, 0, 0)
-                    keybd_event(VK_INSERT, 0, KEYEVENTF_KEYUP, 0)
-                ElseIf palabra Like "*%CONTEXT%*" Then
-                    keybd_event(VK_CONTEXTKEY, 0, 0, 0)
-                    keybd_event(VK_CONTEXTKEY, 0, KEYEVENTF_KEYUP, 0)
-                ElseIf palabra Like "*%CAPITAL%*" Then
-                    keybd_event(VK_CAPITAL, 0, 0, 0)
-                    keybd_event(VK_CAPITAL, 0, KEYEVENTF_KEYUP, 0)
-                ElseIf palabra Like "*%LCLICK%*" Then
-                    keybd_event(VK_LBUTTON, 0, 0, 0)
-                    keybd_event(VK_LBUTTON, 0, KEYEVENTF_KEYUP, 0)
-                ElseIf palabra Like "*%RCLICK%*" Then
-                    keybd_event(VK_RBUTTON, 0, 0, 0)
-                    keybd_event(VK_RBUTTON, 0, KEYEVENTF_KEYUP, 0)
-                ElseIf palabra Like "*%MCLICK%*" Then
-                    keybd_event(VK_MBUTTON, 0, 0, 0)
-                    keybd_event(VK_MBUTTON, 0, KEYEVENTF_KEYUP, 0)
-                Else
-                    My.Computer.Keyboard.SendKeys(palabra, True)
-                End If
-            Next
+            Dim KeyProc As KeyProcessor
+            KeyProc = New KeyProcessor
+            Dim threadKeyProc As Threading.Thread = New Threading.Thread(New Threading.ParameterizedThreadStart(AddressOf KeyProc.ProcesarTeclas))
+            threadKeyProc.Start(contenido.TrimEnd)
+
         Catch ex As Exception
-            Console.WriteLine("ORDENES Error: " & ex.Message)
+            AddToLog("ProcessKeys@Main", "Error: " & ex.Message, True)
         End Try
     End Sub
 
@@ -281,4 +206,24 @@ Public Class Main
         Return retval1
     End Function
 #End Region
+End Class
+Public Class KeyProcessor
+    Public Sub New()
+    End Sub
+    <DllImport("user32.dll")>
+    Public Shared Sub keybd_event(bVk As Byte, bScan As Byte, dwFlags As UInteger, dwExtraInfo As UInteger)
+    End Sub
+    Sub ProcesarTeclas(ByVal listaTeclas As String)
+        Try
+            Const KEYEVENTF_KEYUP = &H2
+            For Each ky As String In listaTeclas.Split(" ")
+                Dim Key As Keys = [Enum].Parse(GetType(Keys), ky, True)
+                keybd_event(Key, 0, 0, 0)
+                keybd_event(Key, 0, KEYEVENTF_KEYUP, 0)
+                Threading.Thread.Sleep(500)
+            Next
+        Catch ex As Exception
+            AddToLog("ProcesarTeclas@KeyProcessor", "Error: " & ex.Message, True)
+        End Try
+    End Sub
 End Class

@@ -2,58 +2,36 @@
 Imports System.Threading
 Imports System.Net
 Imports System.Runtime.Serialization.Formatters.Binary
-Imports Microsoft.Win32
 Public Class Main
     Dim YO As TcpListener
     Dim REMOTO As TcpClient
     Dim RECIBE As Thread
     Dim NS As NetworkStream
-    Dim ServerIP As String = "localhost"
-    Dim ServerPort As Integer = 15243
 
     Dim RESOLUCIONX As Integer
     Dim RESOLUCIONY As Integer
     Dim POSICIONX As Integer
     Dim POSICIONY As Integer
     Public ENVIO As Byte()
-    Sub LoadMemory()
-        Try
-            Dim llaveReg As String = "SOFTWARE\\Zhenboro\\RMTDSK"
-            Dim registerKey As RegistryKey = Registry.CurrentUser.OpenSubKey(llaveReg, True)
-            If registerKey Is Nothing Then
-                SaveMemory()
-            Else
-                ServerIP = registerKey.GetValue("ServerIP")
-                ServerPort = registerKey.GetValue("ServerPort")
-                TextBox1.Text = ServerIP & ":" & ServerPort
-            End If
-        Catch ex As Exception
-            Console.WriteLine("LoadMemory Error: " & ex.Message)
-        End Try
-    End Sub
-    Sub SaveMemory()
-        Try
-            Dim llaveReg As String = "SOFTWARE\\Zhenboro\\RMTDSK"
-            Dim registerKey As RegistryKey = Registry.CurrentUser.OpenSubKey(llaveReg, True)
-            If registerKey Is Nothing Then
-                Registry.CurrentUser.CreateSubKey(llaveReg, True)
-                registerKey = Registry.CurrentUser.OpenSubKey(llaveReg, True)
-            End If
-            registerKey.SetValue("ServerIP", ServerIP)
-            registerKey.SetValue("ServerPort", ServerPort)
-        Catch ex As Exception
-            Console.WriteLine("SaveMemory Error: " & ex.Message)
-        End Try
-    End Sub
+
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Init()
         LoadMemory()
+    End Sub
+    Private Sub Main_HelpRequested(sender As Object, hlpevent As HelpEventArgs) Handles Me.HelpRequested
+        If MessageBox.Show("RMTDSK fue creado y desarrollado por Zhenboro." & vbCrLf & "¿Desea visitar el sitio oficial?", "Not-A-Virus Series", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes Then
+            Process.Start("https://github.com/Zhenboro/RMTDSK")
+            Threading.Thread.Sleep(500)
+            Process.Start("https://github.com/Zhenboro")
+        End If
     End Sub
     Private Sub Main_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         Try
             NS.Dispose()
             YO.Stop()
             RECIBE.Abort()
-        Catch
+        Catch ex As Exception
+            AddToLog("Main_FormClosing@Main", "Error: " & ex.Message, True)
         End Try
     End Sub
     Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles Button1.Click
@@ -64,7 +42,8 @@ Public Class Main
             NS.Dispose()
             YO.Stop()
             RECIBE.Abort()
-        Catch
+        Catch ex As Exception
+            AddToLog("Button2_Click@Main", "Error: " & ex.Message, True)
         End Try
         End
     End Sub
@@ -83,7 +62,7 @@ Public Class Main
             RECIBE.Start()
             TimerONE.Start()
         Catch ex As Exception
-            Console.WriteLine("Iniciar Error: " & ex.Message)
+            AddToLog("Iniciar@Main", "Error: " & ex.Message, True)
         End Try
     End Sub
 
@@ -91,16 +70,22 @@ Public Class Main
         Dim BF As New BinaryFormatter
         Try
             While True
-                REMOTO = YO.AcceptTcpClient()
-                NS = REMOTO.GetStream
-                While REMOTO.Connected = True
-                    PictureBox1.Image = BF.Deserialize(NS)
-                    RESOLUCIONX = PictureBox1.Image.Width
-                    RESOLUCIONY = PictureBox1.Image.Height
-                End While
+                Try
+                    REMOTO = YO.AcceptTcpClient()
+                    NS = REMOTO.GetStream
+                    While REMOTO.Connected = True
+                        Try
+                            PictureBox1.Image = BF.Deserialize(NS)
+                            RESOLUCIONX = PictureBox1.Image.Width
+                            RESOLUCIONY = PictureBox1.Image.Height
+                        Catch
+                        End Try
+                    End While
+                Catch
+                End Try
             End While
         Catch ex As Exception
-            Console.WriteLine("RECIBIR Error: " & ex.Message)
+            AddToLog("RECIBIR@Main", "Error: " & ex.Message, True)
         End Try
     End Sub
 
@@ -111,7 +96,7 @@ Public Class Main
             Dim MENSAJE As String = "IZQUIERDO:" & POSICIONX & ":" & POSICIONY
             ENVIO = System.Text.Encoding.UTF7.GetBytes(MENSAJE)
         Catch ex As Exception
-            Console.WriteLine("PictureBox1_Click Error: " & ex.Message)
+            AddToLog("PictureBox1_Click@Main", "Error: " & ex.Message, True)
         End Try
     End Sub
     Private Sub PictureBox1_DoubleClick(sender As Object, e As System.EventArgs) Handles PictureBox1.DoubleClick
@@ -121,18 +106,23 @@ Public Class Main
             Dim MENSAJE As String = "DOBLE:" & POSICIONX & ":" & POSICIONY
             ENVIO = System.Text.Encoding.UTF7.GetBytes(MENSAJE)
         Catch ex As Exception
-            Console.WriteLine("PictureBox1_DoubleClick Error: " & ex.Message)
+            AddToLog("PictureBox1_DoubleClick@Main", "Error: " & ex.Message, True)
         End Try
     End Sub
 
     Private Sub TimerONE_Tick(sender As Object, e As EventArgs) Handles TimerONE.Tick
         Dim BF As New BinaryFormatter
         Try
-            NS = REMOTO.GetStream
-            BF.Serialize(NS, ENVIO)
-            ENVIO = Nothing
+            If NS IsNot Nothing Then
+                NS = REMOTO.GetStream
+                If ENVIO IsNot Nothing Then
+                    BF.Serialize(NS, ENVIO)
+                End If
+                ENVIO = Nothing
+            End If
+            'Catch
         Catch ex As Exception
-            'Console.WriteLine("TimerONE_Tick Error: " & ex.Message)
+            AddToLog("TimerONE_Tick@Main", "Error: " & ex.Message, True)
         End Try
     End Sub
 
@@ -158,7 +148,7 @@ Public Class Main
             Dim MENSAJE As String = "IZQUIERDO:" & POSICIONX & ":" & POSICIONY
             ENVIO = System.Text.Encoding.UTF7.GetBytes(MENSAJE)
         Catch ex As Exception
-            Console.WriteLine("ClickIzquierdo Error: " & ex.Message)
+            AddToLog("ClickIzquierdo@Main", "Error: " & ex.Message, True)
         End Try
     End Sub
     Sub ClickDerecho()
@@ -166,7 +156,7 @@ Public Class Main
             Dim MENSAJE As String = "DERECHO:" & POSICIONX & ":" & POSICIONY
             ENVIO = System.Text.Encoding.UTF7.GetBytes(MENSAJE)
         Catch ex As Exception
-            Console.WriteLine("ClickDerecho Error: " & ex.Message)
+            AddToLog("ClickDerecho@Main", "Error: " & ex.Message, True)
         End Try
     End Sub
 
@@ -183,7 +173,7 @@ Public Class Main
                 ENVIO = System.Text.Encoding.UTF7.GetBytes(MENSAJE)
             End If
         Catch ex As Exception
-            Console.WriteLine("TaskBar Error: " & ex.Message)
+            AddToLog("TaskBar@Main", "Error: " & ex.Message, True)
         End Try
     End Sub
 
